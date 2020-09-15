@@ -4,47 +4,52 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Controls;
+using Key = System.Windows.Input.Key;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Controls.Primitives;
 
 namespace ComProject
 {
     /// <summary>
-    /// Логика взаимодействия для CoeffControl.xaml
+    /// Логика взаимодействия для NumericControl.xaml
     /// </summary>
-    public partial class CoeffControl : UserControl
+    public partial class NumericControl : UserControl
     {
-        private int value = 5;
-        const int MIN_VALUE = 5;
-        const int MAX_VALUE = 100;
+        private double stepValue = 0;
+        const double MINStep = 0;
+        const double MAXStep = 1000;
+        private double coeffValue = 0;
+        const double MINCoeff = 0;
+        const double MAXCoeff = 200;
         public string Text
         {
-            get { return textBoxCoeff.Text; }
-            set { textBoxCoeff.Text = value; }
+            get { return textBox.Text; }
+            set { textBox.Text = value; }
         }
-        public CoeffControl()
+        public NumericControl()
         {
             InitializeComponent();
         }
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (Int32.TryParse(textBoxCoeff.Text, out int result))
+            if (Double.TryParse(textBox.Text, out double result))
             {
                 ValidateData(ref result);
-                value = result;
+                stepValue = result;
             }
-            textBoxCoeff.Text = value.ToString();
+            textBox.Text = stepValue.ToString();
 
-            if (value == MIN_VALUE)
+            if (stepValue == MINStep)
                 decrement.IsEnabled = false;
 
-            else if (value == MAX_VALUE)
+            else if (stepValue == MAXStep)
                 increment.IsEnabled = false;
 
             else
@@ -53,32 +58,32 @@ namespace ComProject
                 increment.IsEnabled = true;
             }
         }
-        private void ValidateData(ref int value)
+        private void ValidateData(ref double value)
         {
-            if (value > MAX_VALUE)
+            if (value > MAXStep)
             {
-                value = MAX_VALUE;
+                value = MAXStep;
             }
-            if (value < MIN_VALUE)
+            if (value < MINStep)
             {
-                value = MIN_VALUE;
+                value = MINStep;
             }
         }
         private void DecrementClick(object sender, RoutedEventArgs e)
         {
-            int newValue = value - 5;
+            double newValue = stepValue - 5;
             ValidateData(ref newValue);
-            textBoxCoeff.Text = newValue.ToString();
+            textBox.Text = newValue.ToString();
         }
         private void IncrementClick(object sender, RoutedEventArgs e)
         {
-            int newValue = value + 5;
+            double newValue = stepValue + 5;
             ValidateData(ref newValue);
-            textBoxCoeff.Text = newValue.ToString();
+            textBox.Text = newValue.ToString();
         }
         private void Textbox_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            textBoxCoeff.Focusable = true;
+            textBox.Focusable = true;
         }
         private void Textbox_KeyDown(object sender, KeyEventArgs e)
         {

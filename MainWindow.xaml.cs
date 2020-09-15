@@ -29,22 +29,37 @@ namespace ComProject
         }
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            txtBlockCoordX.Text = coordCurrentX.ToString() + " мм";
-            txtBlockCoordY.Text = coordCurrentY.ToString() + " мм";
-            txtBlockCoordZ.Text = coordCurrentZ.ToString() + " мм";
+            //WindowState = WindowState.Maximized;
+            txtBlockCoordX.Text = coordCurrentX + " мм";
+            txtBlockCoordY.Text = coordCurrentY + " мм";
+            txtBlockCoordZ.Text = coordCurrentZ + " мм";
         }
         private void BtnConnectClick(object sender, RoutedEventArgs e)
         {
-            //string coordinateX = coordCurrentX.ToString() + stepX.Text + coeffX.Text;
-            //txtBlockCoordX.Text = coordinateX +" мм";
+            string msgText = "Ничего не происходит...";
+            string caption = "...";
+            MessageBox.Show(msgText, caption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
         private void BtnSendClick(object sender, RoutedEventArgs e)
-        {
-
+        {            
+            coordCurrentX = double.Parse(stepX.textBox.Text) * double.Parse(coeffX.textBox.Text);
+            txtBlockCoordX.Text = coordCurrentX + " мм";
+            coordCurrentY = double.Parse(stepY.textBox.Text) * double.Parse(coeffY.textBox.Text);
+            txtBlockCoordY.Text = coordCurrentY + " мм";
+            coordCurrentZ = double.Parse(stepZ.textBox.Text) * double.Parse(coeffZ.textBox.Text);
+            txtBlockCoordZ.Text = coordCurrentZ + " мм";
         }
         private void BtnRequestClick(object sender, RoutedEventArgs e)
         {
-
+            string msgText = "Ничего не происходит...";
+            string caption = "...";
+            MessageBox.Show(msgText, caption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+        }
+        private void BtnDisConnectClick(object sender, RoutedEventArgs e)
+        {
+            string msgText = "Ничего не происходит...";
+            string caption = "...";
+            MessageBox.Show(msgText, caption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
     }
 }

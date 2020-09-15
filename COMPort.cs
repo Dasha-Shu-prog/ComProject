@@ -44,13 +44,13 @@ namespace ComProject
                     for (int i = 0; i < buffer; ++i)
                     {
                         char bytes = (char)serialPort.ReadByte();
-                        if (bytes == '{' && start == false)
+                        if (bytes == '0' && start == false)
                             start = true; data = "";
 
                         if (start == true)
                             data += bytes.ToString();
 
-                        if (bytes == '}' && start == true) 
+                        if (bytes == '1' && start == true) 
                             start = false; parse = true;
                         if (parse == true)
                         {
@@ -62,12 +62,14 @@ namespace ComProject
                 }
             }
         }
-        public bool Connect(string Name, int Speed)
+        public bool Connect()
         {
             run = false;
             try
             {
                 port.Open();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Connected");
             }
             catch (Exception ex)
             {
@@ -92,6 +94,7 @@ namespace ComProject
         {
             loc = request;
             port.Write(datagram.ToString());
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Microcontroller " + datagram.ToString());
         }
         public void DisConnect()
@@ -103,10 +106,13 @@ namespace ComProject
                     run = false;
                     Thread.Sleep(500);
                     port.Close();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Disconnected");
                 }
             }
             catch (Exception ex)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("ERROR: " + ex.ToString() + "MESSAGE  " + ex.Message);
             }
         }

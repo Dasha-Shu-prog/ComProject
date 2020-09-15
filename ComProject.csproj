@@ -55,11 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="CoeffControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="StepControl.xaml">
+    <Page Include="NumericControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -71,12 +67,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CoeffControl.xaml.cs">
-      <DependentUpon>CoeffControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="COMPort.cs" />
-    <Compile Include="StepControl.xaml.cs">
-      <DependentUpon>StepControl.xaml</DependentUpon>
+    <Compile Include="NumericControl.xaml.cs">
+      <DependentUpon>NumericControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

@@ -3,64 +3,82 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
         xmlns:local="clr-namespace:ComProject"
         xmlns:uc="clr-namespace:ComProject"
         mc:Ignorable="d" Width="854" Height="480" Loaded="WindowLoaded"
         ResizeMode="NoResize" WindowStyle="ToolWindow" Title="COM connect" 
         FontFamily="Arial Unicode MS">
-    <Grid Background="#FF9DC8EE">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="70"/>
-            <RowDefinition Height="70"/>
-            <RowDefinition Height="70"/>
-            <RowDefinition Height="190"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2.6*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="X:" Grid.Column="0" Grid.Row="1"
-                   Style="{DynamicResource txtBlockStyle}"/>
-        <TextBlock Text="Y:" Grid.Column="0" Grid.Row="2" 
-                   Style="{DynamicResource txtBlockStyle}"/>
-        <TextBlock Text="Z:" Grid.Column="0" Grid.Row="3" 
-                   Style="{DynamicResource txtBlockStyle}"/>
-        <TextBlock Text="Текущие координаты " Grid.Column="1" 
+        <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="X:" Grid.Column="0" Grid.Row="0"
+                           Style="{DynamicResource txtBlockStyle}"/>
+                <TextBlock x:Name="txtBlockCoordX" Grid.Column="1" Grid.Row="0"
+                           Style="{DynamicResource txtBlockStyle}"/>
+                <TextBlock Text="Y:" Grid.Column="0" Grid.Row="1"
+                           Style="{DynamicResource txtBlockStyle}"/>
+                <TextBlock x:Name="txtBlockCoordY" Grid.Column="1" Grid.Row="1"
+                           Style="{DynamicResource txtBlockStyle}"/>
+                <TextBlock Text="Z:" Grid.Column="0" Grid.Row="2"
+                           Style="{DynamicResource txtBlockStyle}"/>
+                <TextBlock x:Name="txtBlockCoordZ" Grid.Column="1" Grid.Row="2"
+                           Style="{DynamicResource txtBlockStyle}"/>
+            </Grid>
+        </DockPanel>
+        
+        <TextBlock Text="Текущие координаты" Grid.Column="0" 
                    Grid.Row="0" 
                    Style="{DynamicResource txtBlockStyle}"/>
-        <TextBlock Text="Шаг" Grid.Column="3" Grid.Row="0"
+        <TextBlock Text="Шаг, мм" Grid.Column="1" Grid.Row="0"
                    Style="{DynamicResource txtBlockStyle}"/>
-        <TextBlock Text="Коэффициент" Grid.Column="5" 
-                   Grid.Row="0"
+        <TextBlock Text="Коэффициент" Grid.Column="2" 
+                   Grid.Row="0" 
                    Style="{DynamicResource txtBlockStyle}"/>
-        <TextBlock x:Name="txtBlockCoordX" Grid.Column="1" Grid.Row="1"
-                   Style="{DynamicResource txtBlockStyle}"/>
-        <TextBlock x:Name="txtBlockCoordY" Grid.Column="1" Grid.Row="2"
-                   Style="{DynamicResource txtBlockStyle}"/>
-        <TextBlock x:Name="txtBlockCoordZ" Grid.Column="1" Grid.Row="3"
-                   Style="{DynamicResource txtBlockStyle}"/>
-        <uc:StepControl x:Name="stepX" Text="0.00002" Grid.Column="3" Grid.Row="1"/>
-        <uc:StepControl x:Name="stepY" Text="0.00002" Grid.Column="3" Grid.Row="2"/>
-        <uc:StepControl x:Name="stepZ" Text="0.00002" Grid.Column="3" Grid.Row="3"/>
-        <uc:CoeffControl x:Name="coeffX" Text="5" Grid.Column="5" Grid.Row="1"/>
-        <uc:CoeffControl x:Name="coeffY" Text="5" Grid.Column="5" Grid.Row="2"/>
-        <uc:CoeffControl x:Name="coeffZ" Text="5" Grid.Column="5" Grid.Row="3"/>
+        <uc:NumericControl x:Name="stepX" Text="0" Grid.Column="1" Grid.Row="1"/>
+        <uc:NumericControl x:Name="stepY" Text="0" Grid.Column="1" Grid.Row="2"/>
+        <uc:NumericControl x:Name="stepZ" Text="0" Grid.Column="1" Grid.Row="3"/>
+        <uc:NumericControl x:Name="coeffX" Text="0" Grid.Column="2" Grid.Row="1"/>
+        <uc:NumericControl x:Name="coeffY" Text="0" Grid.Column="2" Grid.Row="2"/>
+        <uc:NumericControl x:Name="coeffZ" Text="0" Grid.Column="2" Grid.Row="3"/>
         <Button x:Name="btnConnect" Content="Подключить"
                 Style="{DynamicResource btnStyle}"
-                Grid.Column="1" Grid.Row="4"
+                Grid.Column="0" Grid.Row="4"
+                VerticalAlignment="Top"
                 Click="BtnConnectClick"/>
+        <Button x:Name="btnDisConnect" Content="Отключить"
+                Style="{DynamicResource btnStyle}"
+                Grid.Column="0" Grid.Row="4"                
+                Click="BtnDisConnectClick"/>
         <Button x:Name="btnSend" Content="Отправить" 
                 Style="{DynamicResource btnStyle}"
-                Grid.Column="3" Grid.Row="4"
+                VerticalAlignment="Top"
+                Grid.Column="1" Grid.Row="4"
                 Click="BtnSendClick"/>
         <Button x:Name="btnRequest" Content="Запросить" 
                 Style="{DynamicResource btnStyle}"
-                Grid.Column="5" Grid.Row="4"
+                Grid.Column="1" Grid.Row="4"
                 Click="BtnRequestClick"/>
     </Grid>
 </Window>
