@@ -25,9 +25,9 @@ namespace ComProject
         private double stepValue = 0;
         const double MINStep = 0;
         const double MAXStep = 1000;
-        private double coeffValue = 0;
-        const double MINCoeff = 0;
-        const double MAXCoeff = 200;
+        //private double coeffValue = 0;
+        //const double MINCoeff = 0;
+        //const double MAXCoeff = 200;
         public string Text
         {
             get { return textBox.Text; }

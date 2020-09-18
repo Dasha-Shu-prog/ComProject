@@ -1,0 +1,30 @@
+﻿<Window x:Class="ComProject.WinCOM"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ComProject"
+        mc:Ignorable="d" MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        Height="450" Width="450" WindowStyle="None" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" Background="#FFABBCC1">
+    <Window.Resources>
+        <ObjectDataProvider ObjectType="{x:Type ports:SerialPort}" MethodName="GetPortNames" x:Key="portNames"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Выбор COM порта" Grid.Row="0"
+                   Style="{DynamicResource txtBlockStyle}"/>
+        <ComboBox x:Name="comboBoxCOMPorts" Grid.Row="1"
+                  Style="{DynamicResource cmbBoxStyle}"
+                  ItemsSource="{Binding Source={StaticResource portNames}}"
+                  SelectionChanged="ComboBoxCOMPorts_SelectionChanged"/>
+        <Button x:Name="btnOK" Content="Ok" Grid.Row="2"
+                Style="{DynamicResource btnStyle}"
+                Click="BtnOK_Click"/>
+    </Grid>
+</Window>

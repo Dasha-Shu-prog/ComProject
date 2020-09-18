@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,26 +20,30 @@ namespace ComProject
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {
+    {        
         private double coordCurrentX = 0.00000;
         private double coordCurrentY = 0.00000;
         private double coordCurrentZ = 0.00000;
+        WinCOM COMPortWindow = new WinCOM();
+        COMPort port;
         public MainWindow()
         {
             InitializeComponent();
         }
         private void WindowLoaded(object sender, RoutedEventArgs e)
-        {
+        {           
             //WindowState = WindowState.Maximized;
+            COMPortWindow.Owner = this;
+            COMPortWindow.Show();
             txtBlockCoordX.Text = coordCurrentX + " мм";
             txtBlockCoordY.Text = coordCurrentY + " мм";
             txtBlockCoordZ.Text = coordCurrentZ + " мм";
         }
         private void BtnConnectClick(object sender, RoutedEventArgs e)
         {
-            string msgText = "Ничего не происходит...";
-            string caption = "...";
-            MessageBox.Show(msgText, caption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            string portName = COMPortWindow.comboBoxCOMPorts.SelectedItem as string;
+            port = new COMPort(portName);
+            port.Connect();
         }
         private void BtnSendClick(object sender, RoutedEventArgs e)
         {            
@@ -48,18 +53,21 @@ namespace ComProject
             txtBlockCoordY.Text = coordCurrentY + " мм";
             coordCurrentZ = double.Parse(stepZ.textBox.Text) * double.Parse(coeffZ.textBox.Text);
             txtBlockCoordZ.Text = coordCurrentZ + " мм";
+            
+            if (Int32.Parse(stepX.textBox.Text) < 10 && Int32.Parse(coeffX.textBox.Text) < 10)
+            {
+                port.Send("SSX0000" + stepX.textBox.Text, "SCX0000" + coeffX.textBox.Text);
+            }
+            else
+                port.Send("SSX000" + stepX.textBox.Text, "SCX000" + coeffX.textBox.Text);
         }
         private void BtnRequestClick(object sender, RoutedEventArgs e)
         {
-            string msgText = "Ничего не происходит...";
-            string caption = "...";
-            MessageBox.Show(msgText, caption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            //port.Receive(sender, e);
         }
         private void BtnDisConnectClick(object sender, RoutedEventArgs e)
         {
-            string msgText = "Ничего не происходит...";
-            string caption = "...";
-            MessageBox.Show(msgText, caption, MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            port.DisConnect();
         }
     }
 }

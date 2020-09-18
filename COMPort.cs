@@ -10,19 +10,19 @@ using System.Threading;
 namespace ComProject
 {
     class COMPort
-    {
+    {        
         SerialPort port;
         private bool run;
-        private int loc;
         private string data = "";
         private bool start = false;
         private bool parse = false;
+        WinCOM COM = new WinCOM();
         //private byte[] byteBuffer = new byte[1024];
-        public COMPort()
-        {
+        public COMPort(string name)
+        {       
             port = new SerialPort()
             {
-                PortName = "COM1",
+                PortName = name,
                 BaudRate = 115200,
                 DataBits = 8,
                 WriteTimeout = 50,
@@ -44,18 +44,23 @@ namespace ComProject
                     for (int i = 0; i < buffer; ++i)
                     {
                         char bytes = (char)serialPort.ReadByte();
-                        if (bytes == '0' && start == false)
-                            start = true; data = "";
-
+                        if (bytes == '{' && start == false)
+                        {
+                            start = true; 
+                            data = "";
+                        }                            
                         if (start == true)
                             data += bytes.ToString();
 
-                        if (bytes == '1' && start == true) 
-                            start = false; parse = true;
+                        if (bytes == '}' && start == true)
+                        {
+                            start = false; 
+                            parse = true;
+                        }
+                            
                         if (parse == true)
                         {
                             parse = false;
-                            Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("Microcontroller " + data.ToString());
                         }
                     }
@@ -77,9 +82,8 @@ namespace ComProject
                 Console.WriteLine("ERROR: " + ex.ToString() + "MESSAGE  " + ex.Message);
             }
             if (port.IsOpen)
-            {
                 run = true;
-            }
+
             else
             {
                 string capt = "Ошибка";
@@ -90,12 +94,19 @@ namespace ComProject
             }
             return run;
         }
-        public void Send(string datagram, int request)
+        public void Send(string datagramStep, string datagramCoeff)
         {
-            loc = request;
-            port.Write(datagram.ToString());
+            if (datagramStep == null && datagramCoeff == null)
+                return;
+
+            if (!port.IsOpen)
+                Connect();
+
+            port.Write(datagramStep);
+            port.Write(datagramCoeff);
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Microcontroller " + datagram.ToString());
+            Console.WriteLine("Step " + datagramStep);
+            Console.WriteLine("Coeff " + datagramCoeff);
         }
         public void DisConnect()
         {
@@ -106,7 +117,6 @@ namespace ComProject
                     run = false;
                     Thread.Sleep(500);
                     port.Close();
-                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Disconnected");
                 }
             }
