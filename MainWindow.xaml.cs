@@ -22,8 +22,8 @@ namespace ComProject
     public partial class MainWindow : Window
     {        
         private double coordCurrentX = 0.00000;
-        private double coordCurrentY = 0.00000;
-        private double coordCurrentZ = 0.00000;
+        private double coordCurrentY = 0;
+        private double coordCurrentZ = 0;
         WinCOM COMPortWindow = new WinCOM();
         COMPort port;
         public MainWindow()
@@ -56,10 +56,10 @@ namespace ComProject
             
             if (Int32.Parse(stepX.textBox.Text) < 10 && Int32.Parse(coeffX.textBox.Text) < 10)
             {
-                port.Send("SSX0000" + stepX.textBox.Text, "SCX0000" + coeffX.textBox.Text);
+                port.Send();
             }
             else
-                port.Send("SSX000" + stepX.textBox.Text, "SCX000" + coeffX.textBox.Text);
+                port.Send();
         }
         private void BtnRequestClick(object sender, RoutedEventArgs e)
         {

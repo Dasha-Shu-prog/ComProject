@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ComProject"
-        xmlns:uc="clr-namespace:ComProject"
+        xmlns:uc="clr-namespace:ComProject" Background="#FFD3D7DA"
         mc:Ignorable="d" Width="854" Height="480" Loaded="WindowLoaded"
         ResizeMode="NoResize" WindowStyle="ToolWindow" Title="COM connect" 
         FontFamily="Arial Unicode MS" WindowStartupLocation="CenterOwner">

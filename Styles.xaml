@@ -37,11 +37,26 @@
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="FontFamily" Value="Arial Unicode MS"/>
-        <Setter Property="Background" Value="LightGreen"/>
         <Setter Property="FontSize" Value="24"/>
         <Setter Property="Height" Value="40"/>
         <Setter Property="Width" Value="150"/>
         <Setter Property="Grid.ColumnSpan" Value="2"/>
+        <Setter Property="Button.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border x:Name="Head">
+                        <Rectangle Fill="LightGreen"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="true">
+                        <Setter TargetName="Head" Property="Background" Value="#FF7979CB"/>
+                        <Setter TargetName="Head" Property="BorderBrush" Value="#FF00ACFF"/>
+                        <Setter TargetName="Head" Property="BorderThickness" Value="1,1,1,1"/>
+                    </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
     
     <Style TargetType="RepeatButton" x:Key="repeatBtnStyle">

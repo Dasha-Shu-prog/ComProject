@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace ComProject
 {
-    class COMPort
+    class COMPort : MainWindow
     {        
         SerialPort port;
         private bool run;
@@ -94,19 +94,39 @@ namespace ComProject
             }
             return run;
         }
-        public void Send(string datagramStep, string datagramCoeff)
+        public void Send()
         {
-            if (datagramStep == null && datagramCoeff == null)
+            //string zero = "0000";
+            //if (Int32.Parse(stepX.textBox.Text) < 10)
+            //{
+
+            //}
+            string datagramStepX = "SSX+000" + stepX.textBox.Text;
+            string datagramCoeffX = "SCX+000" + coeffX.textBox.Text;
+            string datagramStepY = "SSY+000" + stepY.textBox.Text;
+            string datagramCoeffY = "SCY+000" + coeffY.textBox.Text;
+            string datagramStepZ = "SSZ+000" + stepZ.textBox.Text;
+            string datagramCoeffZ = "SCZ+000" + coeffZ.textBox.Text;
+            if (datagramStepX == null || datagramCoeffX == null ||
+                datagramStepY == null || datagramCoeffY == null ||
+                datagramStepZ == null || datagramCoeffZ == null)
                 return;
 
             if (!port.IsOpen)
                 Connect();
 
-            port.Write(datagramStep);
-            port.Write(datagramCoeff);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Step " + datagramStep);
-            Console.WriteLine("Coeff " + datagramCoeff);
+            port.Write(datagramStepX);
+            port.Write(datagramCoeffX);
+            port.Write(datagramStepY);
+            port.Write(datagramCoeffY);
+            port.Write(datagramStepZ);
+            port.Write(datagramCoeffZ);
+            Console.WriteLine(datagramStepX);
+            Console.WriteLine(datagramCoeffX);
+            Console.WriteLine(datagramStepY);
+            Console.WriteLine(datagramCoeffY);
+            Console.WriteLine(datagramStepZ);
+            Console.WriteLine(datagramCoeffZ);
         }
         public void DisConnect()
         {

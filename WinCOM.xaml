@@ -19,8 +19,8 @@
         </Grid.RowDefinitions>
         <TextBlock Text="Выбор COM порта" Grid.Row="0"
                    Style="{DynamicResource txtBlockStyle}"/>
-        <ComboBox x:Name="comboBoxCOMPorts" Grid.Row="1"
-                  Style="{DynamicResource cmbBoxStyle}"
+        <ComboBox x:Name="comboBoxCOMPorts" Grid.Row="1"  
+                  Style="{DynamicResource cmbBoxStyle}" 
                   ItemsSource="{Binding Source={StaticResource portNames}}"
                   SelectionChanged="ComboBoxCOMPorts_SelectionChanged"/>
         <Button x:Name="btnOK" Content="Ok" Grid.Row="2"
