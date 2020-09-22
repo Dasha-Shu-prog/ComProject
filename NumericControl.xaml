@@ -14,10 +14,10 @@
         </Grid.ColumnDefinitions>
         <RepeatButton x:Name="decrement" Grid.Column="0" Content="&lt;" 
                       Style="{StaticResource repeatBtnStyle}"
-                      Click="DecrementClick" Padding="0,-5,0,0"/>
+                      Click="DecrementClick"/>
         <RepeatButton x:Name="increment" Grid.Column="2" Content="&gt;"
                       Style="{StaticResource repeatBtnStyle}"
-                      Click="IncrementClick" Padding="0,-5,1,0"/>
+                      Click="IncrementClick"/>
         <TextBox x:Name="textBox" Grid.Column="1" Width="140"
                  Text="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type local:NumericControl}},Path=Value}"
                  Style="{StaticResource txtBoxStyle}" Focusable="False"

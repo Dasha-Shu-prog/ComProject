@@ -19,7 +19,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="2.6*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="1.2*"/>
         </Grid.RowDefinitions>
         <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3">
             <Grid>
@@ -55,29 +56,27 @@
         <TextBlock Text="Коэффициент" Grid.Column="2" 
                    Grid.Row="0" 
                    Style="{DynamicResource txtBlockStyle}"/>
-        <uc:NumericControl x:Name="stepX" Text="0" Grid.Column="1" Grid.Row="1"/>
-        <uc:NumericControl x:Name="stepY" Text="0" Grid.Column="1" Grid.Row="2"/>
-        <uc:NumericControl x:Name="stepZ" Text="0" Grid.Column="1" Grid.Row="3"/>
-        <uc:NumericControl x:Name="coeffX" Text="0" Grid.Column="2" Grid.Row="1"/>
-        <uc:NumericControl x:Name="coeffY" Text="0" Grid.Column="2" Grid.Row="2"/>
-        <uc:NumericControl x:Name="coeffZ" Text="0" Grid.Column="2" Grid.Row="3"/>
+        <uc:NumericControl x:Name="stepX" Text="2" minValue="2" maxValue="10" step="1" Grid.Column="1" Grid.Row="1"/>
+        <uc:NumericControl x:Name="stepY" Text="2" minValue="2" maxValue="10" step="1" Grid.Column="1" Grid.Row="2"/>
+        <uc:NumericControl x:Name="stepZ" Text="2" minValue="2" maxValue="10" step="1" Grid.Column="1" Grid.Row="3"/>
+        <uc:NumericControl x:Name="coeffX" Text="0.0001" minValue="0.0001" maxValue="0.01" step="0.0001" Grid.Column="2" Grid.Row="1"/>
+        <uc:NumericControl x:Name="coeffY" Text="0.0001" minValue="0.0001" maxValue="0.01" step="0.0001" Grid.Column="2" Grid.Row="2"/>
+        <uc:NumericControl x:Name="coeffZ" Text="0.0001" minValue="0.0001" maxValue="0.01" step="0.0001" Grid.Column="2" Grid.Row="3"/>
         <Button x:Name="btnConnect" Content="Подключить"
-                Style="{DynamicResource btnStyle}"
+                Style="{StaticResource btnStyle}"
                 Grid.Column="0" Grid.Row="4"
-                VerticalAlignment="Top"
                 Click="BtnConnectClick"/>
         <Button x:Name="btnDisConnect" Content="Отключить"
                 Style="{DynamicResource btnStyle}"
-                Grid.Column="0" Grid.Row="4"                
+                Grid.Column="0" Grid.Row="5"                
                 Click="BtnDisConnectClick"/>
         <Button x:Name="btnSend" Content="Отправить" 
                 Style="{DynamicResource btnStyle}"
-                VerticalAlignment="Top"
                 Grid.Column="1" Grid.Row="4"
                 Click="BtnSendClick"/>
         <Button x:Name="btnRequest" Content="Запросить" 
                 Style="{DynamicResource btnStyle}"
-                Grid.Column="1" Grid.Row="4"
+                Grid.Column="1" Grid.Row="5"
                 Click="BtnRequestClick"/>
     </Grid>
 </Window>

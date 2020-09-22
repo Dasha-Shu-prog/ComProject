@@ -21,9 +21,9 @@ namespace ComProject
     /// </summary>
     public partial class MainWindow : Window
     {        
-        private double coordCurrentX = 0.00000;
-        private double coordCurrentY = 0;
-        private double coordCurrentZ = 0;
+        private float coordCurrentX = 0;
+        private float coordCurrentY = 0;
+        private float coordCurrentZ = 0;
         WinCOM COMPortWindow = new WinCOM();
         COMPort port;
         public MainWindow()
@@ -47,19 +47,13 @@ namespace ComProject
         }
         private void BtnSendClick(object sender, RoutedEventArgs e)
         {            
-            coordCurrentX = double.Parse(stepX.textBox.Text) * double.Parse(coeffX.textBox.Text);
+            coordCurrentX = float.Parse(stepX.textBox.Text) * float.Parse(coeffX.textBox.Text);
             txtBlockCoordX.Text = coordCurrentX + " мм";
-            coordCurrentY = double.Parse(stepY.textBox.Text) * double.Parse(coeffY.textBox.Text);
+            coordCurrentY = float.Parse(stepY.textBox.Text) * float.Parse(coeffY.textBox.Text);
             txtBlockCoordY.Text = coordCurrentY + " мм";
-            coordCurrentZ = double.Parse(stepZ.textBox.Text) * double.Parse(coeffZ.textBox.Text);
+            coordCurrentZ = float.Parse(stepZ.textBox.Text) * float.Parse(coeffZ.textBox.Text);
             txtBlockCoordZ.Text = coordCurrentZ + " мм";
-            
-            if (Int32.Parse(stepX.textBox.Text) < 10 && Int32.Parse(coeffX.textBox.Text) < 10)
-            {
-                port.Send();
-            }
-            else
-                port.Send();
+            port.Send();
         }
         private void BtnRequestClick(object sender, RoutedEventArgs e)
         {

@@ -96,17 +96,39 @@ namespace ComProject
         }
         public void Send()
         {
-            //string zero = "0000";
-            //if (Int32.Parse(stepX.textBox.Text) < 10)
-            //{
-
-            //}
-            string datagramStepX = "SSX+000" + stepX.textBox.Text;
-            string datagramCoeffX = "SCX+000" + coeffX.textBox.Text;
-            string datagramStepY = "SSY+000" + stepY.textBox.Text;
-            string datagramCoeffY = "SCY+000" + coeffY.textBox.Text;
-            string datagramStepZ = "SSZ+000" + stepZ.textBox.Text;
-            string datagramCoeffZ = "SCZ+000" + coeffZ.textBox.Text;
+            string datagramStepX;
+            string datagramCoeffX;
+            string datagramStepY;
+            string datagramCoeffY;
+            string datagramStepZ;
+            string datagramCoeffZ;
+            if (float.Parse(stepX.textBox.Text) == 10)
+            {
+                datagramStepX = "SSX000" + stepX.textBox.Text;
+            }
+            else
+            {
+                datagramStepX = "SSX0000" + stepX.textBox.Text;
+            }
+            if (float.Parse(stepY.textBox.Text) == 10)
+            {
+                datagramStepY = "SSY000" + stepY.textBox.Text;
+            }
+            else
+            {
+                datagramStepY = "SSY0000" + stepY.textBox.Text;
+            }
+            if (float.Parse(stepZ.textBox.Text) == 10)
+            {
+                datagramStepZ = "SSZ000" + stepZ.textBox.Text;
+            }
+            else
+            {
+                datagramStepZ = "SSZ0000" + stepZ.textBox.Text;
+            }
+            datagramCoeffX = "CX" + coeffX.textBox.Text;
+            datagramCoeffY = "CY" + coeffY.textBox.Text;
+            datagramCoeffZ = "CZ" + coeffZ.textBox.Text;
             if (datagramStepX == null || datagramCoeffX == null ||
                 datagramStepY == null || datagramCoeffY == null ||
                 datagramStepZ == null || datagramCoeffZ == null)
@@ -122,11 +144,11 @@ namespace ComProject
             port.Write(datagramStepZ);
             port.Write(datagramCoeffZ);
             Console.WriteLine(datagramStepX);
-            Console.WriteLine(datagramCoeffX);
+            Console.WriteLine('S' + datagramCoeffX);
             Console.WriteLine(datagramStepY);
-            Console.WriteLine(datagramCoeffY);
+            Console.WriteLine('S' + datagramCoeffY);
             Console.WriteLine(datagramStepZ);
-            Console.WriteLine(datagramCoeffZ);
+            Console.WriteLine('S' + datagramCoeffZ);
         }
         public void DisConnect()
         {
@@ -135,15 +157,22 @@ namespace ComProject
                 if (port.IsOpen)
                 {
                     run = false;
-                    Thread.Sleep(500);
+                    Thread.Sleep(50);
+                    port.Close();
+                    Console.WriteLine("Disconnected");
+                }
+                else
+                {
+                    port.Open();
+                    Console.WriteLine("Connected");
+                    Thread.Sleep(50);
                     port.Close();
                     Console.WriteLine("Disconnected");
                 }
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("ERROR: " + ex.ToString() + "MESSAGE  " + ex.Message);
+                Console.WriteLine(port.PortName + "ERROR: " + ex.ToString() + "MESSAGE  " + ex.Message);
             }
         }
     }

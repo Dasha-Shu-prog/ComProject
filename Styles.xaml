@@ -29,11 +29,10 @@
         <Setter Property="FontSize" Value="24"/>
         <Setter Property="Height" Value="36"/>
         <Setter Property="Width" Value="150"/>
+        <Setter Property="Cursor" Value="Hand"/>
     </Style>
 
     <Style TargetType="Button" x:Key="btnStyle">
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="FontFamily" Value="Arial Unicode MS"/>
@@ -41,24 +40,29 @@
         <Setter Property="Height" Value="40"/>
         <Setter Property="Width" Value="150"/>
         <Setter Property="Grid.ColumnSpan" Value="2"/>
-        <Setter Property="Button.Template">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate>
-                    <Border x:Name="Head">
-                        <Rectangle Fill="LightGreen"/>
-                    </Border>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Border x:Name="border" Background="LightGreen" 
+                                BorderBrush="#FF3CA43C" BorderThickness="1"/>
+                        <ContentPresenter Content="{TemplateBinding Content}" 
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"/>
+                    </Grid>
                     <ControlTemplate.Triggers>
                     <Trigger Property="IsMouseOver" Value="true">
-                        <Setter TargetName="Head" Property="Background" Value="#FF7979CB"/>
-                        <Setter TargetName="Head" Property="BorderBrush" Value="#FF00ACFF"/>
-                        <Setter TargetName="Head" Property="BorderThickness" Value="1,1,1,1"/>
+                            <Setter TargetName="border" Property="Background" Value="#FF61AE61"/>
+                        <Setter TargetName="border" Property="BorderBrush" Value="#FF244B16"/>
+                        <Setter TargetName="border" Property="BorderThickness" Value="1"/>
                     </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style TargetType="RepeatButton" x:Key="repeatBtnStyle">
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -70,5 +74,6 @@
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Height" Value="36"/>
         <Setter Property="Width" Value="36"/>
+        <Setter Property="Padding" Value="0, -4, 0, 0"/>
     </Style>
 </ResourceDictionary>

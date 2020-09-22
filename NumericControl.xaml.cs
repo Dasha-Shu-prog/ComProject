@@ -22,34 +22,32 @@ namespace ComProject
     /// </summary>
     public partial class NumericControl : UserControl
     {
-        private double stepValue = 0;
-        const double MINStep = 0;
-        const double MAXStep = 1000;
-        //private double coeffValue = 0;
-        //const double MINCoeff = 0;
-        //const double MAXCoeff = 200;
+        private float value;
         public string Text
         {
             get { return textBox.Text; }
             set { textBox.Text = value; }
         }
+        public float minValue { get; set; }
+        public float maxValue { get; set; }
+        public float step { get; set; }
         public NumericControl()
         {
             InitializeComponent();
         }
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (Double.TryParse(textBox.Text, out double result))
+            if (float.TryParse(textBox.Text, out float result))
             {
                 ValidateData(ref result);
-                stepValue = result;
+                value = result;
             }
-            textBox.Text = stepValue.ToString();
+            textBox.Text = value.ToString();
 
-            if (stepValue == MINStep)
+            if (value == minValue)
                 decrement.IsEnabled = false;
 
-            else if (stepValue == MAXStep)
+            else if (value == maxValue)
                 increment.IsEnabled = false;
 
             else
@@ -58,26 +56,26 @@ namespace ComProject
                 increment.IsEnabled = true;
             }
         }
-        private void ValidateData(ref double value)
+        private void ValidateData(ref float value)
         {
-            if (value > MAXStep)
+            if (value > maxValue)
             {
-                value = MAXStep;
+                value = maxValue;
             }
-            if (value < MINStep)
+            if (value < minValue)
             {
-                value = MINStep;
+                value = minValue;
             }
         }
         private void DecrementClick(object sender, RoutedEventArgs e)
         {
-            double newValue = stepValue - 5;
+            float newValue = value - step;
             ValidateData(ref newValue);
             textBox.Text = newValue.ToString();
         }
         private void IncrementClick(object sender, RoutedEventArgs e)
         {
-            double newValue = stepValue + 5;
+            float newValue = value + step;
             ValidateData(ref newValue);
             textBox.Text = newValue.ToString();
         }
