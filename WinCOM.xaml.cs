@@ -35,8 +35,8 @@ namespace ComProject
         }
         private void ComboBoxCOMPorts_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selectedComboBoxItem = sender as ComboBox;
-           // string name = selectedComboBoxItem.SelectedItem as string;
+            //var selectedComboBoxItem = sender as ComboBox;
+            //string name = selectedComboBoxItem.SelectedItem as string;
             //serialPort.PortName = comboBoxCOMPorts.SelectedItem.ToString();
         }
     }

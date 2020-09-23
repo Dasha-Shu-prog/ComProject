@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ComProject"
         xmlns:uc="clr-namespace:ComProject" Background="#FFD3D7DA"
         mc:Ignorable="d" Width="854" Height="480" Loaded="WindowLoaded"
-        ResizeMode="NoResize" WindowStyle="ToolWindow" Title="COM connect" 
+        ResizeMode="NoResize" WindowStyle="ToolWindow" Title="COM connect" Closed="Window_Closed"
         FontFamily="Arial Unicode MS" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.ColumnDefinitions>

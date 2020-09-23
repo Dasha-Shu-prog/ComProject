@@ -22,7 +22,8 @@
         <ComboBox x:Name="comboBoxCOMPorts" Grid.Row="1"  
                   Style="{DynamicResource cmbBoxStyle}" 
                   ItemsSource="{Binding Source={StaticResource portNames}}"
-                  SelectionChanged="ComboBoxCOMPorts_SelectionChanged"/>
+                  SelectionChanged="ComboBoxCOMPorts_SelectionChanged"
+                  SelectedItem="{Binding portName}"/>
         <Button x:Name="btnOK" Content="Ok" Grid.Row="2"
                 Style="{DynamicResource btnStyle}"
                 Click="BtnOK_Click"/>

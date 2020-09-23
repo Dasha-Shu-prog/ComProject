@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,9 +22,12 @@ namespace ComProject
     /// </summary>
     public partial class MainWindow : Window
     {        
-        private float coordCurrentX = 0;
-        private float coordCurrentY = 0;
-        private float coordCurrentZ = 0;
+        public decimal coordCurrentStepX = 0;
+        public decimal coordCurrentStepY = 0;
+        public decimal coordCurrentStepZ = 0;
+        public decimal coordCurrentCoeffX = 0;
+        public decimal coordCurrentCoeffY = 0;
+        public decimal coordCurrentCoeffZ = 0;
         WinCOM COMPortWindow = new WinCOM();
         COMPort port;
         public MainWindow()
@@ -35,9 +39,9 @@ namespace ComProject
             //WindowState = WindowState.Maximized;
             COMPortWindow.Owner = this;
             COMPortWindow.Show();
-            txtBlockCoordX.Text = coordCurrentX + " мм";
-            txtBlockCoordY.Text = coordCurrentY + " мм";
-            txtBlockCoordZ.Text = coordCurrentZ + " мм";
+            txtBlockCoordX.Text = coordCurrentStepX + " мм";
+            txtBlockCoordY.Text = coordCurrentStepY + " мм";
+            txtBlockCoordZ.Text = coordCurrentStepZ + " мм";
         }
         private void BtnConnectClick(object sender, RoutedEventArgs e)
         {
@@ -47,21 +51,28 @@ namespace ComProject
         }
         private void BtnSendClick(object sender, RoutedEventArgs e)
         {            
-            coordCurrentX = float.Parse(stepX.textBox.Text) * float.Parse(coeffX.textBox.Text);
-            txtBlockCoordX.Text = coordCurrentX + " мм";
-            coordCurrentY = float.Parse(stepY.textBox.Text) * float.Parse(coeffY.textBox.Text);
-            txtBlockCoordY.Text = coordCurrentY + " мм";
-            coordCurrentZ = float.Parse(stepZ.textBox.Text) * float.Parse(coeffZ.textBox.Text);
-            txtBlockCoordZ.Text = coordCurrentZ + " мм";
+            coordCurrentStepX = decimal.Parse(stepX.textBox.Text);
+            coordCurrentCoeffX = decimal.Parse(coeffX.textBox.Text);
+            txtBlockCoordX.Text = coordCurrentStepX * coordCurrentCoeffX + " мм";
+            coordCurrentStepY = decimal.Parse(stepY.textBox.Text);
+            coordCurrentCoeffY = decimal.Parse(coeffY.textBox.Text);
+            txtBlockCoordY.Text = coordCurrentStepY * coordCurrentCoeffY + " мм";
+            coordCurrentStepZ = decimal.Parse(stepZ.textBox.Text);
+            coordCurrentCoeffZ = decimal.Parse(coeffZ.textBox.Text);
+            txtBlockCoordZ.Text = coordCurrentStepZ * coordCurrentCoeffZ + " мм";
             port.Send();
         }
         private void BtnRequestClick(object sender, RoutedEventArgs e)
-        {
+        {            
             //port.Receive(sender, e);
         }
         private void BtnDisConnectClick(object sender, RoutedEventArgs e)
         {
             port.DisConnect();
+        }
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

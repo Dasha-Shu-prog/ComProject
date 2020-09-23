@@ -19,7 +19,7 @@
                       Style="{StaticResource repeatBtnStyle}"
                       Click="IncrementClick"/>
         <TextBox x:Name="textBox" Grid.Column="1" Width="140"
-                 Text="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type local:NumericControl}},Path=Value}"
+                 Text="{Binding minValue, RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type local:NumericControl}}}"
                  Style="{StaticResource txtBoxStyle}" Focusable="False"
                  MouseDown="Textbox_MouseDown" KeyDown="Textbox_KeyDown"
                  PreviewKeyDown="Textbox_PreviewKeyDown" TextChanged="TextBox_TextChanged"/>

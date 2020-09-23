@@ -22,22 +22,22 @@ namespace ComProject
     /// </summary>
     public partial class NumericControl : UserControl
     {
-        private float value;
+        private decimal value;
         public string Text
         {
             get { return textBox.Text; }
             set { textBox.Text = value; }
         }
-        public float minValue { get; set; }
-        public float maxValue { get; set; }
-        public float step { get; set; }
+        public decimal minValue { get; set; }
+        public decimal maxValue { get; set; }
+        public decimal step { get; set; }
         public NumericControl()
         {
             InitializeComponent();
         }
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (float.TryParse(textBox.Text, out float result))
+            if (decimal.TryParse(textBox.Text, out decimal result))
             {
                 ValidateData(ref result);
                 value = result;
@@ -56,7 +56,7 @@ namespace ComProject
                 increment.IsEnabled = true;
             }
         }
-        private void ValidateData(ref float value)
+        private void ValidateData(ref decimal value)
         {
             if (value > maxValue)
             {
@@ -69,13 +69,13 @@ namespace ComProject
         }
         private void DecrementClick(object sender, RoutedEventArgs e)
         {
-            float newValue = value - step;
+            decimal newValue = value - step;
             ValidateData(ref newValue);
             textBox.Text = newValue.ToString();
         }
         private void IncrementClick(object sender, RoutedEventArgs e)
         {
-            float newValue = value + step;
+            decimal newValue = value + step;
             ValidateData(ref newValue);
             textBox.Text = newValue.ToString();
         }
