@@ -21,7 +21,8 @@ namespace ComProject
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {        
+    {
+        List<string> list = new List<string>();
         public decimal coordCurrentStepX = 0;
         public decimal coordCurrentStepY = 0;
         public decimal coordCurrentStepZ = 0;
@@ -60,7 +61,13 @@ namespace ComProject
             coordCurrentStepZ = decimal.Parse(stepZ.textBox.Text);
             coordCurrentCoeffZ = decimal.Parse(coeffZ.textBox.Text);
             txtBlockCoordZ.Text = coordCurrentStepZ * coordCurrentCoeffZ + " мм";
-            port.Send();
+            list.Add("SSX" + coordCurrentStepX);
+            list.Add("SCX" + coordCurrentCoeffX);
+            list.Add("SSY" + coordCurrentStepY);
+            list.Add("SCY" + coordCurrentCoeffY);
+            list.Add("SSZ" + coordCurrentStepZ);
+            list.Add("SCZ" + coordCurrentCoeffZ);
+            port.Send(list);
         }
         private void BtnRequestClick(object sender, RoutedEventArgs e)
         {            
@@ -68,7 +75,7 @@ namespace ComProject
         }
         private void BtnDisConnectClick(object sender, RoutedEventArgs e)
         {
-            port.DisConnect();
+            port.Disсonnect();
         }
         private void Window_Closed(object sender, EventArgs e)
         {

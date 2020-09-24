@@ -6,23 +6,25 @@ using System.IO.Ports;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Threading;
+using System.Windows.Threading;
+using System.Windows.Documents;
 
 namespace ComProject
 {
+    public delegate void AnswerHandler(string text);
     class COMPort : MainWindow
     {        
         SerialPort port;
-        private string data = "";
-        private bool start = false;
-        private bool parse = false;
         WinCOM COM = new WinCOM();
-        //private byte[] byteBuffer = new byte[1024];
+        private byte[] byteBuffer = new byte[1024];
+        public event AnswerHandler DataReceived;
+        public event AnswerHandler ErrorReceived;
         public COMPort(string name)
         {       
             port = new SerialPort()
             {
                 PortName = name,
-                BaudRate = 115200,
+                BaudRate = 9600,
                 DataBits = 8,
                 WriteTimeout = 50,
                 ReadTimeout = 50,
@@ -30,42 +32,52 @@ namespace ComProject
                 StopBits = StopBits.One,
                 Handshake = Handshake.None
             };
-            port.DataReceived += new SerialDataReceivedEventHandler(Receive);
+            port.ErrorReceived += new SerialErrorReceivedEventHandler(ErrorReceive);
         }
-        public void Receive (object sender, SerialDataReceivedEventArgs e)
+        public void ErrorReceive (object sender, SerialErrorReceivedEventArgs e)
         {
-            port.ReadTimeout = 500;
+            string message = string.Concat
+                (
+                    (sender is SerialPort) ? (sender as SerialPort).PortName : "COM0",
+                    " ERROR " + e.EventType.ToString()
+                );
+            Console.WriteLine(message);
+
+            switch (e.EventType)
+            {
+                case SerialError.Frame:
+                    message = "Ошибка кадрирования";
+                    break;
+                case SerialError.Overrun:
+                    message = "Переполнение буфера символов";
+                    break;
+                case SerialError.RXOver:
+                    message = "Переполнение входного буфера";
+                    break;
+                case SerialError.RXParity:
+                    message = "Ошибка четности";
+                    break;
+                case SerialError.TXFull:
+                    message = "Переполнение выходного буфера";
+                    break;
+            }
+        }
+        private void OnDataReceived(string data)
+        {
             if (port.IsOpen)
             {
-                SerialPort serialPort = (SerialPort)sender;
-                int buffer = serialPort.BytesToRead;
-                for (int i = 0; i < buffer; ++i)
-                {
-                    char bytes = (char)serialPort.ReadByte();
-                    if (bytes == '{' && start == false)
-                    {
-                        start = true; 
-                        data = "";
-                    }                            
-                    if (start == true)
-                        data += bytes.ToString();
+                data = data.Replace('\0', '0');
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.WriteLine(port.PortName + " --> " + data.ToString());
 
-                    if (bytes == '}' && start == true)
-                    {
-                        start = false; 
-                        parse = true;
-                    }
-                            
-                    if (parse == true)
-                    {
-                        parse = false;
-                        Console.WriteLine("Microcontroller " + data.ToString());
-                    }
-                }
+                DataReceived?.Invoke(data);
             }
         }
         public bool Connect()
         {
+            if (port.IsOpen)
+                return true;
+
             try
             {
                 port.Open();
@@ -78,75 +90,87 @@ namespace ComProject
             {
                 Console.WriteLine("ERROR: " + ex.ToString() + "MESSAGE  " + ex.Message);
             }
-            return true;
+            if (port.IsOpen)
+            {
+                ReadAsync();
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("ERROR: " + "Ошибка" + " MESSAGE: " + "Не могу открыть порт!");
+            }
+            return false;
         }
-        public void Send()
+        public void ReadAsync()
         {
-            port.WriteTimeout = 500;
-            string datagramStepX;
-            string datagramCoeffX;
-            string datagramStepY;
-            string datagramCoeffY;
-            string datagramStepZ;
-            string datagramCoeffZ;
-            if (coordCurrentStepX == 10)
-            {
-                datagramStepX = "SSX000" + coordCurrentStepX.ToString();
-            }
-            else
-            {
-                datagramStepX = "SSX0000" + coordCurrentStepX;
-            }
-            if (coordCurrentStepY == 10)
-            {
-                datagramStepY = "SSY000" +coordCurrentStepY;
-            }
-            else
-            {
-                datagramStepY = "SSY0000" + coordCurrentStepY;
-            }
-            if (coordCurrentStepZ == 10)
-            {
-                datagramStepZ = "SSZ000" + coordCurrentStepZ;
-            }
-            else
-            {
-                datagramStepZ = "SSZ0000" + coordCurrentStepZ;
-            }
-            datagramCoeffX = "CX" + coordCurrentCoeffX;
-            datagramCoeffY = "CY" + coordCurrentCoeffY;
-            datagramCoeffZ = "CZ" + coordCurrentCoeffZ;
-            if (datagramStepX == null || datagramCoeffX == null ||
-                datagramStepY == null || datagramCoeffY == null ||
-                datagramStepZ == null || datagramCoeffZ == null)
-                return;
-
-            if (!port.IsOpen)
-                Connect();
-
-            port.Write(datagramStepX);
-            //port.Write(datagramCoeffX);
-            //port.Write(datagramStepY);
-            //port.Write(datagramCoeffY);
-            //port.Write(datagramStepZ);
-            //port.Write(datagramCoeffZ);
-            Console.WriteLine(datagramStepX);
-            Console.WriteLine('S' + datagramCoeffX);
-            Console.WriteLine(datagramStepY);
-            Console.WriteLine('S' + datagramCoeffY);
-            Console.WriteLine(datagramStepZ);
-            Console.WriteLine('S' + datagramCoeffZ);
-        }
-        public void DisConnect()
-        {            
             try
             {
-                port.Close();
-                Console.WriteLine("Disconnected");
+                port.BaseStream.BeginRead(byteBuffer, 0, byteBuffer.Length, OnRead, null);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(port.PortName + "ERROR: " + ex.ToString() + "MESSAGE  " + ex.Message);
+                ErrorReceived?.Invoke("ReadAsync");
+                Console.WriteLine($"Не удалось получить ответ от {port.PortName}.\n{ex.Message}");
+            }
+        }
+        private void OnRead(IAsyncResult result)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                try
+                {
+                    if (!port.IsOpen)
+                        return;
+
+                    int numRead = port.BaseStream.EndRead(result);
+
+                    if (numRead > 0)
+                        OnDataReceived(Encoding.ASCII.GetString(byteBuffer, 0, numRead));
+                }
+                catch (Exception ex)
+                {
+                    ErrorReceived?.Invoke("OnRead");
+                    Console.WriteLine($"Не удалось получить ответ от контроллера {port.PortName}.\n{ex.Message}");
+                }
+            }));
+            ReadAsync();
+        }
+        public void Send(List<string> list)
+        {
+            try
+            {
+                if (!port.IsOpen)
+                    Connect();
+                if (port.IsOpen)
+                {
+                    port.Write(list.ToString());
+                    Console.WriteLine(list);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Команда для {port.PortName} не отправлена!\n{e.Message}");
+            }           
+        }
+        public void Disсonnect()
+        {            
+            try
+            {
+                if (port.IsOpen)
+                {
+                    port.Close();
+                    Console.WriteLine("Disconnected");
+                }
+                else
+                {
+                    string message = "Порт закрыт!\nДля начала подключитесь к порту!";
+                    string caption = "Ошибка!";
+                    MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex.ToString() + "MESSAGE  " + ex.Message);
             }
         }
     }

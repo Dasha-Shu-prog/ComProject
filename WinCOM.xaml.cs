@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.IO.Ports;
@@ -32,12 +33,6 @@ namespace ComProject
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
-        }
-        private void ComboBoxCOMPorts_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //var selectedComboBoxItem = sender as ComboBox;
-            //string name = selectedComboBoxItem.SelectedItem as string;
-            //serialPort.PortName = comboBoxCOMPorts.SelectedItem.ToString();
         }
     }
 }

@@ -20,7 +20,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="1.2*"/>
+            <RowDefinition Height="1.4*"/>
         </Grid.RowDefinitions>
         <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3">
             <Grid>
