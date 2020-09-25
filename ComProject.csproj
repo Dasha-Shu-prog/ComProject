@@ -56,6 +56,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Algorithm.cs" />
+    <Compile Include="CommandParsing.cs" />
+    <Compile Include="Commands.cs" />
+    <Compile Include="Info.cs" />
     <Compile Include="WinCOM.xaml.cs">
       <DependentUpon>WinCOM.xaml</DependentUpon>
     </Compile>

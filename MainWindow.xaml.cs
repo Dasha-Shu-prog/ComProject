@@ -67,7 +67,7 @@ namespace ComProject
             list.Add("SCY" + coordCurrentCoeffY);
             list.Add("SSZ" + coordCurrentStepZ);
             list.Add("SCZ" + coordCurrentCoeffZ);
-            port.Send(list);
+            port.Send(coordCurrentStepX.ToString());
         }
         private void BtnRequestClick(object sender, RoutedEventArgs e)
         {            

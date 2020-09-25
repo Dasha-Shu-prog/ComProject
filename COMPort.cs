@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.IO.Ports;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Threading;
 using System.Windows.Threading;
 using System.Windows.Documents;
@@ -12,7 +12,7 @@ using System.Windows.Documents;
 namespace ComProject
 {
     public delegate void AnswerHandler(string text);
-    class COMPort : MainWindow
+    class COMPort
     {        
         SerialPort port;
         WinCOM COM = new WinCOM();
@@ -30,7 +30,8 @@ namespace ComProject
                 ReadTimeout = 50,
                 Parity = Parity.None,
                 StopBits = StopBits.One,
-                Handshake = Handshake.None
+                Handshake = Handshake.None,
+                DtrEnable = false
             };
             port.ErrorReceived += new SerialErrorReceivedEventHandler(ErrorReceive);
         }
@@ -67,8 +68,7 @@ namespace ComProject
             if (port.IsOpen)
             {
                 data = data.Replace('\0', '0');
-                Console.ForegroundColor = ConsoleColor.DarkCyan;
-                Console.WriteLine(port.PortName + " --> " + data.ToString());
+                Console.WriteLine(port.PortName + ": " + data.ToString());
 
                 DataReceived?.Invoke(data);
             }
@@ -92,12 +92,13 @@ namespace ComProject
             }
             if (port.IsOpen)
             {
+                port.DiscardInBuffer();
                 ReadAsync();
                 return true;
             }
             else
             {
-                Console.WriteLine("ERROR: " + "Ошибка" + " MESSAGE: " + "Не могу открыть порт!");
+                Console.WriteLine("ERROR: " + " MESSAGE: " + "Не могу открыть порт!");
             }
             return false;
         }
@@ -130,26 +131,27 @@ namespace ComProject
                 catch (Exception ex)
                 {
                     ErrorReceived?.Invoke("OnRead");
-                    Console.WriteLine($"Не удалось получить ответ от контроллера {port.PortName}.\n{ex.Message}");
+                    Console.WriteLine($"Не удалось получить ответ от {port.PortName}.\n{ex.Message}");
                 }
             }));
             ReadAsync();
         }
-        public void Send(List<string> list)
+        public void Send(string text)
         {
             try
             {
                 if (!port.IsOpen)
                     Connect();
+
                 if (port.IsOpen)
                 {
-                    port.Write(list.ToString());
-                    Console.WriteLine(list);
+                    port.Write(text);
+                    Console.WriteLine(port.PortName + ": " + text);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Команда для {port.PortName} не отправлена!\n{e.Message}");
+                Console.WriteLine($"Команда {text} на {port.PortName} не отправлена!\n{e.Message}");
             }           
         }
         public void Disсonnect()
@@ -159,13 +161,16 @@ namespace ComProject
                 if (port.IsOpen)
                 {
                     port.Close();
-                    Console.WriteLine("Disconnected");
                 }
                 else
                 {
                     string message = "Порт закрыт!\nДля начала подключитесь к порту!";
                     string caption = "Ошибка!";
                     MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                if (!port.IsOpen)
+                {
+                    Console.WriteLine("Disconnected");
                 }
             }
             catch (Exception ex)

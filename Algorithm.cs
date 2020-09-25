@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 namespace ComProject
 {
     //Работа с СОМ портом
-    class Algorithm : MainWindow
+    class Algorithm
     {
-        
+        // оси X, Y, Z
+        Commands commandAxisX = new Commands();
+        Commands commandAxisY = new Commands();
+        Commands commandAxisZ = new Commands();
+        Info info = new Info();
+        COMPort port;
+
     }
 }
