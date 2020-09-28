@@ -34,5 +34,10 @@ namespace ComProject
         {
             this.DragMove();
         }
+
+        private void ComboBoxCOMPorts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedItem = sender as ComboBox;
+        }
     }
 }

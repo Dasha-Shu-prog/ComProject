@@ -28,7 +28,7 @@ namespace ComProject
                     //старт оси X
                     if (response.StartsWith("X")) // axis X
                     {
-                        commandAxisX.startCommand = true;
+                        commandAxisX.setCommand = true;
                         response = response.Remove(0, 1);
                         if (response.StartsWith("S")) //SetXStep command 
                         {
@@ -69,7 +69,7 @@ namespace ComProject
                     //старт оси Y
                     else if (response.StartsWith("Y"))// axis Y
                     {
-                        commandAxisY.startCommand = true;
+                        commandAxisY.setCommand = true;
                         response = response.Remove(0, 1);
 
                         if (response.StartsWith("S")) //SetYStep command 
@@ -97,7 +97,7 @@ namespace ComProject
                     //старт оси Z
                     else if (response.StartsWith("Z"))
                     {
-                        commandAxisZ.startCommand = true;
+                        commandAxisZ.setCommand = true;
                         response = response.Remove(0, 1);
 
                         if (response.StartsWith("S")) //SetZStep command 
@@ -149,26 +149,24 @@ namespace ComProject
                         }
                     }
 
-                }
-                //ответ: выполнение команды завершено
-                
-                else if (response.StartsWith("I") || infoData == true || receive.StartsWith("I"))//information
+                }                
+                else if (response.StartsWith("I") || infoData == true || receive.StartsWith("I")) //information
                 {
                     infoData = true;
                     // if (counterInfoPack < 200) 
                     {
-                        int indexOfChar = 0;
+                        int indexOfChar;
                         if (receive.IndexOf('!') > 1)
                         {
                             counterInfo = 0;
                             indexOfChar = receive.IndexOf('!');
                             response = receive.Substring(0, indexOfChar);
 
-                            string[] info = new string[8]; // R coordinates, Z coordinates// C0, C1, C2, S0, S1, Z0, Z1 
+                            string[] info = new string[8];
                             response = response.Remove(0, 1);
                             info = response.Split(',');
                             infoData = false;
-                            ParsingInfoCompleted?.Invoke(info);
+                            ParsingCommand?.Invoke(info);
                             receive = receive.Remove(0, indexOfChar + 1);
                             return false;
                         }
@@ -177,23 +175,15 @@ namespace ComProject
                             info = info + response;
                             counterInfo++;
                         }
-
-                    }
-                    //  else
-                    {
-                        //     MessageBox.Show("Ошибка приема информации координат от БУ", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                else if (response.StartsWith("B"))//information
-                {
-                    //axis is busy
-                }
-                // ответ: неизвестный
                 else
                 {
                     if (infoData == false)
                     {
-                        MessageBox.Show("Неизвестный ответ от БУ", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        string message = "Неизвестный ответ";
+                        string capt = "Ошибка";
+                        MessageBox.Show(message, capt, MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     receive = "";
                     receivedMsg = "";
@@ -203,7 +193,6 @@ namespace ComProject
                 receivedMsg = "";
             }
             return false;
-
         }
     }
 }
