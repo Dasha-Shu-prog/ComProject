@@ -62,19 +62,19 @@
         <uc:NumericControl x:Name="coeffX" Text="0.0001" minValue="0.0001" maxValue="0.01" step="0.0001" Grid.Column="2" Grid.Row="1"/>
         <uc:NumericControl x:Name="coeffY" Text="0.0001" minValue="0.0001" maxValue="0.01" step="0.0001" Grid.Column="2" Grid.Row="2"/>
         <uc:NumericControl x:Name="coeffZ" Text="0.0001" minValue="0.0001" maxValue="0.01" step="0.0001" Grid.Column="2" Grid.Row="3"/>
-        <Button x:Name="btnConnect" Content="Подключить"
+        <Button x:Name="btnConnect" Content="Подключить" Grid.ColumnSpan="2"
                 Style="{StaticResource btnStyle}"
                 Grid.Column="0" Grid.Row="4"
                 Click="BtnConnectClick"/>
-        <Button x:Name="btnDisConnect" Content="Отключить"
+        <Button x:Name="btnDisConnect" Content="Отключить" Grid.ColumnSpan="2"
                 Style="{DynamicResource btnStyle}"
                 Grid.Column="0" Grid.Row="5"                
                 Click="BtnDisConnectClick"/>
-        <Button x:Name="btnSend" Content="Отправить" 
+        <Button x:Name="btnSend" Content="Отправить" Grid.ColumnSpan="2"
                 Style="{DynamicResource btnStyle}"
                 Grid.Column="1" Grid.Row="4"
                 Click="BtnSendClick"/>
-        <Button x:Name="btnRequest" Content="Запросить" 
+        <Button x:Name="btnRequest" Content="Запросить" Grid.ColumnSpan="2"
                 Style="{DynamicResource btnStyle}"
                 Grid.Column="1" Grid.Row="5"
                 Click="BtnRequestClick"/>

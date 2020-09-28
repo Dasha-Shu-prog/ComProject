@@ -21,10 +21,24 @@ namespace ComProject
     /// </summary>
     public partial class WinCOM : Window
     {
-        //SerialPort serialPort = new SerialPort();
         public WinCOM()
         {
             InitializeComponent();
+
+            comboBoxCOMPorts.Items.Add("МК не подключен");
+            comboBoxCOMPorts.SelectedIndex = 0;
+            btnOK.IsEnabled = false;
+            var portsNames = SerialPort.GetPortNames();
+            if (portsNames.Count() != 0)
+            {
+                comboBoxCOMPorts.Items.Clear();
+
+                foreach (string name in portsNames)
+                {
+                    comboBoxCOMPorts.Items.Add(name);
+                }
+                comboBoxCOMPorts.SelectedIndex = 0;
+            }
         }
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
@@ -34,10 +48,9 @@ namespace ComProject
         {
             this.DragMove();
         }
-
-        private void ComboBoxCOMPorts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
-            var selectedItem = sender as ComboBox;
+            Close();
         }
     }
 }

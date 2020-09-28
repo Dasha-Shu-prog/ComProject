@@ -31,10 +31,12 @@ namespace ComProject
         public decimal coordCurrentCoeffZ = 0;
         WinCOM COMPortWindow = new WinCOM();
         COMPort port;
+        
         public MainWindow()
         {
             InitializeComponent();
         }
+
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {           
             //WindowState = WindowState.Maximized;

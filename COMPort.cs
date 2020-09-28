@@ -67,7 +67,7 @@ namespace ComProject
         {
             if (port.IsOpen)
             {
-                data = data.Replace('\0', '0');
+                //data = data.Replace('\0', '0');
                 Console.WriteLine(port.PortName + ": " + data.ToString());
 
                 DataReceived?.Invoke(data);
