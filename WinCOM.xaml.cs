@@ -31,6 +31,7 @@ namespace ComProject
             var portsNames = SerialPort.GetPortNames();
             if (portsNames.Count() != 0)
             {
+                btnOK.IsEnabled = true;
                 comboBoxCOMPorts.Items.Clear();
 
                 foreach (string name in portsNames)

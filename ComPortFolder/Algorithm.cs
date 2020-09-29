@@ -9,7 +9,7 @@ using System.Windows.Threading;
 namespace ComProject
 {
     //Работа с СОМ портом
-    class Algorithm
+    class Algorithm : MainWindow
     {
         // оси X, Y, Z
         Commands commandAxisX = new Commands();
@@ -23,6 +23,7 @@ namespace ComProject
         bool stopAxisZ = false;
         bool start = false;
         bool stop = false;
+        int setmode;
         int timeoutStartAxisX = 0;// миллисекунды
         int timeoutStartAxisY = 0;// миллисекунды
         int timeoutStartAxisZ = 0;// миллисекунды
@@ -50,13 +51,16 @@ namespace ComProject
         public Algorithm(COMPort port)
         {
             parsing = new CommandParsing();
-            parsing.ParsingCommand += Parsing_Command;
-
             timerTimeoutCommandsStart.Interval = TimeSpan.FromMilliseconds(10);
-            timerTimeoutCommandsStart.Tick += timerTimeoutCommandsStart_Tick;
+            timerTimeoutCommandsStart.Tick += TimerTimeoutCommandsStart_Tick;
             timerTimeoutCommandsStart.Start();
+            workerInfo.DoWork += Worker_DoWorkAskInfo;
         }
-        public bool startWorkerCommands(string cmd)
+        private void Worker_DoWorkAskInfo(object sender, DoWorkEventArgs e)
+        {
+            port.Send((string)e.Argument);
+        }
+        public bool StartWorkerCommands(string cmd)
         {
             askInfo = true;
             if (!workerInfo.IsBusy)
@@ -66,7 +70,7 @@ namespace ComProject
             }
             return false;
         }
-        private void timerTimeoutCommandsStart_Tick(object sender, EventArgs e)
+        private void TimerTimeoutCommandsStart_Tick(object sender, EventArgs e)
         {
             if (timeoutAxisX == true)
             {
@@ -100,14 +104,9 @@ namespace ComProject
         {
             start = startIn;
         }
-        public void Parsing_Command(string[] info)
+        public Info GetInfo()
         {
-            int x0 = 0;
-            int x1 = 0;
-            int y0 = 0;
-            int y1 = 0;
-            int z0 = 0;
-            int z1 = 0;
+            return information;
         }
         public bool SetCommands(string cmdAxisX, string cmdAxisY, string cmdAxisZ, bool cmdX, bool cmdY, bool cmdZ)
         {
@@ -135,63 +134,34 @@ namespace ComProject
                 commandAxisZ.twoCommands = true;
             }
             return true;
-        }       
-        public bool ManualPosition()
-        {
-            //Control sensors switch position
-            if (commandAxisX.setCommand == false)
-            {
-                if ((commandAxisX.command == "SXS" && information.S0 == true) || (commandAxisX.command == "SXC00000" && information.S1 == true))
-                {
-                    if ((information.S0 == true || information.S1 == true) && information.C0 == true && information.C1 == true && information.C2 == true) // check if centered and one of sensorses is used
-                    {
-                        if ((commandAxisZ.setCommand == false) && (commandAxisZ.command != "") && (timeoutAxisZ == false))
-                        {
-                            while (startWorkerCommands(commandAxisZ.command) == false)
-                            {
-                                commandAxisZ.sendCommand = false;
-                            }
-                            {
-                                commandAxisZ.sendCommand = true;
-                                timeoutAxisZ = true;
-                            }
-                        }
-                        if ((commandAxisY.setCommand == false) && (commandAxisY.command != "") && (timeoutAxisY == false))
-                        {
-                            while (startWorkerCommands(commandAxisY.command) == false)
-                            {
-                                commandAxisY.sendCommand = false;
-                            }
-                            {
-                                commandAxisY.sendCommand = true;
-                                timeoutAxisY = true;
-                            }
-                        }
-                    }
-                    if ((commandAxisX.command == "SXS00000" && information.S1 == false) || (commandAxisX.command == "SXC00000" && information.S0 == false))
-                    {
-                        while (startWorkerCommands(commandAxisX.command) == false)
-                        {
-                            commandAxisX.sendCommand = false;
-                        }
-                        {
-                            commandAxisX.sendCommand = true;
-                            timeoutAxisX = true;
-                        }
-                    }
-                }
-            }
-          return true;
         }
-        public void CheckSet()
+        private void SetStepOrCoeff(int mode)
         {
-            if (commandAxisX.sendCommand != true)
+            setmode = mode;
+            if (setmode == 0) // set step
+            {
+                commandAxisX.command = setXStep;
+                commandAxisY.command = setYStep;
+                commandAxisZ.command = setZStep;
+            }
+            if (setmode == 1) // set coeff
+            {
+                commandAxisX.command = setXCoeff;
+                commandAxisY.command = setYCoeff;
+                commandAxisZ.command = setZCoeff;
+            }
+        }
+
+        public void CheckEnd()
+        {
+            if (commandAxisX.endCommand == true)
             {
                 commandAxisX.command = "";
                 commandAxisX.errorCode = 0;
+                commandAxisX.endCommand = false;
                 commandAxisX.newCommand = false;
                 commandAxisX.sendCommand = false;
-                commandAxisX.setCommand = false;
+                commandAxisX.startCommand = false;
                 commandAxisX.typeCommand = ' ';
                 commandAxisX.value = 0;
                 timeoutAxisX = false;
@@ -204,13 +174,14 @@ namespace ComProject
                     stopAxisX = false;
                 }
             }
-            if (commandAxisY.sendCommand != true)
+            if (commandAxisY.endCommand == true)
             {
                 commandAxisY.command = "";
                 commandAxisY.errorCode = 0;
+                commandAxisX.endCommand = false;
                 commandAxisY.newCommand = false;
                 commandAxisY.sendCommand = false;
-                commandAxisY.setCommand = false;
+                commandAxisY.startCommand = false;
                 commandAxisY.typeCommand = ' ';
                 commandAxisY.value = 0;
                 timeoutAxisY = false;
@@ -223,13 +194,14 @@ namespace ComProject
                     stopAxisY = false;
                 }
             }
-            if (commandAxisZ.sendCommand != true)
+            if (commandAxisZ.endCommand == true)
             {
                 commandAxisZ.command = "";
                 commandAxisZ.errorCode = 0;
+                commandAxisX.endCommand = false;
                 commandAxisZ.newCommand = false;
                 commandAxisZ.sendCommand = false;
-                commandAxisZ.setCommand = false;
+                commandAxisZ.startCommand = false;
                 commandAxisZ.typeCommand = ' ';
                 commandAxisZ.value = 0;
                 timeoutAxisZ = false;

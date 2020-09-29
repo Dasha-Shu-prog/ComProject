@@ -41,9 +41,7 @@ namespace ComProject
                 (
                     (sender is SerialPort) ? (sender as SerialPort).PortName : "COM0",
                     " ERROR " + e.EventType.ToString()
-                );
-            Console.WriteLine(message);
-
+                );            
             switch (e.EventType)
             {
                 case SerialError.Frame:
@@ -62,14 +60,14 @@ namespace ComProject
                     message = "Переполнение выходного буфера";
                     break;
             }
+            Console.WriteLine(message);
         }
         private void OnDataReceived(string data)
         {
             if (port.IsOpen)
             {
-                //data = data.Replace('\0', '0');
+                data = data.Replace('\n', ' ');
                 Console.WriteLine(port.PortName + ": " + data.ToString());
-
                 DataReceived?.Invoke(data);
             }
         }

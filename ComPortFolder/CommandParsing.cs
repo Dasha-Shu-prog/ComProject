@@ -22,22 +22,22 @@ namespace ComProject
             if (receive.Length >= 8)
             {
                 string response = receive.Substring(startindex, 8);
-                if (response.StartsWith("S")) //comand set
+                if (response.StartsWith("S")) //comand start
                 {
                     response = response.Remove(0, 1);
                     //старт оси X
                     if (response.StartsWith("X")) // axis X
                     {
-                        commandAxisX.setCommand = true;
+                        commandAxisX.startCommand = true;
                         response = response.Remove(0, 1);
-                        if (response.StartsWith("S")) //SetXStep command 
+                        if (response.StartsWith("S")) //StartXStep command 
                         {
                             response = response.Remove(0, 1);
                             commandAxisX.typeCommand = 'S';
                             receive = receive.Remove(0, 8);
                             return true;
                         }
-                        else if (response.StartsWith("C")) //SetXCoeff command 
+                        else if (response.StartsWith("C")) //StartXCoeff command 
                         {
                             response = response.Remove(0, 1);
                             commandAxisX.typeCommand = 'C';
@@ -69,17 +69,17 @@ namespace ComProject
                     //старт оси Y
                     else if (response.StartsWith("Y"))// axis Y
                     {
-                        commandAxisY.setCommand = true;
+                        commandAxisY.startCommand = true;
                         response = response.Remove(0, 1);
 
-                        if (response.StartsWith("S")) //SetYStep command 
+                        if (response.StartsWith("S")) //StartYStep command 
                         {
                             response = response.Remove(0, 1);
                             commandAxisY.typeCommand = 'S';
                             receive = receive.Remove(0, 8);
                             return true;
                         }
-                        else if (response.StartsWith("C")) //SetYCoeff command 
+                        else if (response.StartsWith("C")) //StartYCoeff command 
                         {
                             response = response.Remove(0, 1);
                             commandAxisY.typeCommand = 'C';
@@ -97,10 +97,10 @@ namespace ComProject
                     //старт оси Z
                     else if (response.StartsWith("Z"))
                     {
-                        commandAxisZ.setCommand = true;
+                        commandAxisZ.startCommand = true;
                         response = response.Remove(0, 1);
 
-                        if (response.StartsWith("S")) //SetZStep command 
+                        if (response.StartsWith("S")) //StartZStep command 
                         {
                             response = response.Remove(0, 1);
                             commandAxisZ.typeCommand = 'S';
@@ -148,15 +148,116 @@ namespace ComProject
                             return false;
                         }
                     }
+                }
+                else if (response.StartsWith("E")) //comand end
+                {
+                    response = response.Remove(0, 1);
+                    //старт оси X
+                    if (response.StartsWith("X"))
+                    {
+                        commandAxisX.endCommand = true;
+                        response = response.Remove(0, 1);
+                        if (response.StartsWith("S")) //EndXStep command 
+                        {
+                            response = response.Remove(0, 1);
+                            commandAxisX.typeCommand = 'S';
+                            receive = receive.Remove(0, 8);
+                            return true;
+                        }
+                        else if (response.StartsWith("C")) //EndXCoeff command 
+                        {
+                            response = response.Remove(0, 1);
+                            commandAxisX.typeCommand = 'C';
+                            receive = receive.Remove(0, 8);
+                            return true;
+                        }
+                        else // старт неизвестной команды 
+                        {
+                            int codeError;
+                            if (Int32.TryParse(response, out codeError))
+                            {
+                                switch (codeError)
+                                {
+                                    case 0: break;
+                                    case 1: break;
+                                    case 2: break;
+                                }
+                                return false;
+                            }
+                            else
+                            {
+                                string message = "Неизвестная команда";
+                                string capt = "Ошибка";
+                                MessageBox.Show(message, capt, MessageBoxButton.OK, MessageBoxImage.Error);
+                                return false;
+                            }
+                        }
+                    }
+                    //старт оси Y
+                    else if (response.StartsWith("Y"))
+                    {
+                        commandAxisY.endCommand = true;
+                        response = response.Remove(0, 1);
 
-                }                
+                        if (response.StartsWith("S")) //EndYStep command 
+                        {
+                            response = response.Remove(0, 1);
+                            commandAxisY.typeCommand = 'S';
+                            receive = receive.Remove(0, 8);
+                            return true;
+                        }
+                        else if (response.StartsWith("C")) //EndYCoeff command 
+                        {
+                            response = response.Remove(0, 1);
+                            commandAxisY.typeCommand = 'C';
+                            receive = receive.Remove(0, 8);
+                            return true;
+                        }
+                        else
+                        {
+                            string message = "Неизвестная команда";
+                            string capt = "Ошибка";
+                            MessageBox.Show(message, capt, MessageBoxButton.OK, MessageBoxImage.Error);
+                            return false;
+                        }
+                    }
+                    //старт оси Z
+                    else if (response.StartsWith("Z"))
+                    {
+                        commandAxisZ.endCommand = true;
+                        response = response.Remove(0, 1);
+
+                        if (response.StartsWith("S")) //EndZStep command 
+                        {
+                            response = response.Remove(0, 1);
+                            commandAxisZ.typeCommand = 'S';
+                            receive = receive.Remove(0, 8);
+                            return true;
+
+                        }
+                        else if (response.StartsWith("C")) //EndZCoeff command
+                        {
+                            response = response.Remove(0, 1);
+                            commandAxisZ.typeCommand = 'C';
+                            receive = receive.Remove(0, 8);
+                            return true;
+                        }
+                        else
+                        {
+                            string message = "Неизвестная команда";
+                            string capt = "Ошибка";
+                            MessageBox.Show(message, capt, MessageBoxButton.OK, MessageBoxImage.Error);
+                            return false;
+                        }
+                    }             
+                }
                 else if (response.StartsWith("I") || infoData == true || receive.StartsWith("I")) //information
                 {
                     infoData = true;
                     // if (counterInfoPack < 200) 
                     {
                         int indexOfChar;
-                        if (receive.IndexOf('!') > 1)
+                        if (receive.IndexOf('S') > 1)
                         {
                             counterInfo = 0;
                             indexOfChar = receive.IndexOf('!');
@@ -172,7 +273,7 @@ namespace ComProject
                         }
                         else
                         {
-                            info = info + response;
+                            info += response;
                             counterInfo++;
                         }
                     }
@@ -189,7 +290,6 @@ namespace ComProject
                     receivedMsg = "";
                     return false;
                 }
-
                 receivedMsg = "";
             }
             return false;

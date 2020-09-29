@@ -55,10 +55,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Algorithm.cs" />
-    <Compile Include="CommandParsing.cs" />
-    <Compile Include="Commands.cs" />
-    <Compile Include="Info.cs" />
+    <Compile Include="ComPortFolder\Algorithm.cs" />
+    <Compile Include="ComPortFolder\CommandParsing.cs" />
+    <Compile Include="ComPortFolder\Commands.cs" />
+    <Compile Include="ComPortFolder\Info.cs" />
     <Compile Include="WinCOM.xaml.cs">
       <DependentUpon>WinCOM.xaml</DependentUpon>
     </Compile>
@@ -74,7 +74,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="COMPort.cs" />
+    <Compile Include="ComPortFolder\COMPort.cs" />
     <Compile Include="NumericControl.xaml.cs">
       <DependentUpon>NumericControl.xaml</DependentUpon>
     </Compile>

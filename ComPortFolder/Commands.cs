@@ -11,7 +11,8 @@ namespace ComProject
         public bool newCommand = false;
         public bool twoCommands = false;
         public bool sendCommand = false;
-        public bool setCommand = false;
+        public bool startCommand = false;
+        public bool endCommand = false;
         public char typeCommand;
         public string nextCommand;
         public int value;

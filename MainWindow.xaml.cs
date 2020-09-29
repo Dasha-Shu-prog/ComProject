@@ -29,6 +29,12 @@ namespace ComProject
         public decimal coordCurrentCoeffX = 0;
         public decimal coordCurrentCoeffY = 0;
         public decimal coordCurrentCoeffZ = 0;
+        public string xStep, xCoeff,
+                      yStep, yCoeff,
+                      zStep, zCoeff,
+                      setXStep, setXCoeff,
+                      setYStep, setYCoeff,
+                      setZStep, setZCoeff;
         WinCOM COMPortWindow = new WinCOM();
         COMPort port;
         
@@ -63,17 +69,35 @@ namespace ComProject
             coordCurrentStepZ = decimal.Parse(stepZ.textBox.Text);
             coordCurrentCoeffZ = decimal.Parse(coeffZ.textBox.Text);
             txtBlockCoordZ.Text = coordCurrentStepZ * coordCurrentCoeffZ + " мм";
-            list.Add("SSX" + coordCurrentStepX);
-            list.Add("SCX" + coordCurrentCoeffX);
-            list.Add("SSY" + coordCurrentStepY);
-            list.Add("SCY" + coordCurrentCoeffY);
-            list.Add("SSZ" + coordCurrentStepZ);
-            list.Add("SCZ" + coordCurrentCoeffZ);
-            port.Send(coordCurrentStepX.ToString());
+            xStep = "XS"; xCoeff = "XC";
+            yStep = "YS"; yCoeff = "YC";
+            zStep = "ZS"; zCoeff = "ZC";            
+            do
+            {
+                xStep += '0'; xCoeff += '0';
+                yStep += '0'; yCoeff += '0';
+                zStep += '0'; zCoeff += '0';
+                setXStep = xStep + coordCurrentStepX;
+                setXCoeff = xCoeff + coordCurrentCoeffX;
+                setYStep = yStep + coordCurrentStepY;
+                setYCoeff = yCoeff + coordCurrentCoeffY;
+                setZStep = zStep + coordCurrentStepZ;
+                setZCoeff = zCoeff + coordCurrentCoeffZ;
+            } while (setXStep.Length != 8 && setXCoeff.Length != 8 &&
+                   setYStep.Length != 8 && setYCoeff.Length != 8 &&
+                   setZStep.Length != 8 && setZCoeff.Length != 8);
+
+            list.Add(setXStep);
+            list.Add(setXCoeff);
+            list.Add(setYStep);
+            list.Add(setYCoeff);
+            list.Add(setZStep);
+            list.Add(setZCoeff);
+            port.Send(list.ToString());
         }
         private void BtnRequestClick(object sender, RoutedEventArgs e)
         {            
-            //port.Receive(sender, e);
+            port.ReadAsync();
         }
         private void BtnDisConnectClick(object sender, RoutedEventArgs e)
         {
@@ -81,6 +105,7 @@ namespace ComProject
         }
         private void Window_Closed(object sender, EventArgs e)
         {
+            //Thread.CurrentThread.Abort();
             this.Close();
         }
     }
