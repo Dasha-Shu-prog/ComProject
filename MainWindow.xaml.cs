@@ -35,19 +35,16 @@ namespace ComProject
                       setXStep, setXCoeff,
                       setYStep, setYCoeff,
                       setZStep, setZCoeff;
-        WinCOM COMPortWindow = new WinCOM();
-        COMPort port;
-        
+        WinCOM COMPortWindow;
+        COMPort port;      
         public MainWindow()
         {
             InitializeComponent();
         }
-
         private void WindowLoaded(object sender, RoutedEventArgs e)
-        {           
+        {
             //WindowState = WindowState.Maximized;
-            COMPortWindow.Owner = this;
-            COMPortWindow.Show();
+            PortWindow();
             txtBlockCoordX.Text = coordCurrentStepX + " мм";
             txtBlockCoordY.Text = coordCurrentStepY + " мм";
             txtBlockCoordZ.Text = coordCurrentStepZ + " мм";
@@ -57,8 +54,12 @@ namespace ComProject
             string portName = COMPortWindow.comboBoxCOMPorts.SelectedItem as string;
             port = new COMPort(portName);
             port.Connect();
-        }
-        private void BtnSendClick(object sender, RoutedEventArgs e)
+            if (port.Connect())
+            {
+                UsbComBtn.Tag = BitmapFrame.Create(new Uri(@"pack://application:,,,/Images/usb-connect.png"));
+            }
+        }        
+    private void BtnSendClick(object sender, RoutedEventArgs e)
         {            
             coordCurrentStepX = decimal.Parse(stepX.textBox.Text);
             coordCurrentCoeffX = decimal.Parse(coeffX.textBox.Text);
@@ -74,26 +75,30 @@ namespace ComProject
             zStep = "ZS"; zCoeff = "ZC";            
             do
             {
-                xStep += '0'; xCoeff += '0';
-                yStep += '0'; yCoeff += '0';
-                zStep += '0'; zCoeff += '0';
+                xStep += '0';
                 setXStep = xStep + coordCurrentStepX;
                 setXCoeff = xCoeff + coordCurrentCoeffX;
+            } while (setXStep.Length <= 7);
+            do
+            {
+                yStep += '0';
                 setYStep = yStep + coordCurrentStepY;
                 setYCoeff = yCoeff + coordCurrentCoeffY;
+            } while (setYStep.Length <= 7);
+            do
+            {
+                zStep += '0';
                 setZStep = zStep + coordCurrentStepZ;
                 setZCoeff = zCoeff + coordCurrentCoeffZ;
-            } while (setXStep.Length != 8 && setXCoeff.Length != 8 &&
-                   setYStep.Length != 8 && setYCoeff.Length != 8 &&
-                   setZStep.Length != 8 && setZCoeff.Length != 8);
-
+            } while (setZStep.Length <= 7);
             list.Add(setXStep);
             list.Add(setXCoeff);
             list.Add(setYStep);
             list.Add(setYCoeff);
             list.Add(setZStep);
             list.Add(setZCoeff);
-            port.Send(list.ToString());
+            //port.Send(list.ToString());
+            port.Send(setXStep);
         }
         private void BtnRequestClick(object sender, RoutedEventArgs e)
         {            
@@ -102,6 +107,20 @@ namespace ComProject
         private void BtnDisConnectClick(object sender, RoutedEventArgs e)
         {
             port.Disсonnect();
+        }
+        private void UsbComBtn_Click(object sender, RoutedEventArgs e)
+        {
+            PortWindow();
+        }
+        private void PortWindow()
+        {
+            if (COMPortWindow != null)
+            {
+                COMPortWindow.Close();
+            }
+            COMPortWindow = new WinCOM();
+            COMPortWindow.Owner = this;
+            COMPortWindow.Show();
         }
         private void Window_Closed(object sender, EventArgs e)
         {

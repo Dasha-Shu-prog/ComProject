@@ -54,10 +54,53 @@
                         <Setter TargetName="border" Property="BorderBrush" Value="#FF2D4F21"/>
                         <Setter TargetName="border" Property="BorderThickness" Value="1"/>
                     </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="border" Property="Background" Value="#FFF05B55"/>
-                            <Setter TargetName="border" Property="BorderBrush" Value="#FFF7534C"/>
-                            <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter TargetName="border" Property="Background" Value="#FFF05B55"/>
+                        <Setter TargetName="border" Property="BorderBrush" Value="#FFF7534C"/>
+                        <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="true">
+                        <Setter TargetName="border" Property="Background" Value="#FF2D4F21"/>
+                        <Setter TargetName="border" Property="BorderBrush" Value="#FF2D4F21"/>
+                        <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                    </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key ="btnUSB" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="BorderBrush" Value="{x:Null}"/>
+        <Setter Property="Foreground" Value="{x:Null}"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,50,20,0"/>
+        <Setter Property="Padding" Value="0,-5,0,1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Ellipse x:Name="ellipse" Grid.Row="0" Width="50" 
+                                 Height="70" SnapsToDevicePixels="true" 
+                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Image Grid.Row="0" Source="{TemplateBinding Tag}" Height="50" 
+                               Width="50" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Label Grid.Row="1" Content="{TemplateBinding Content}" FontSize="14" 
+                               FontFamily="Arial Unicode MS"
+                               Background="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Fill" TargetName="ellipse" Value="#FFA8B96D"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter  Property="Fill" TargetName="ellipse"  Value="#FF2D4F21"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

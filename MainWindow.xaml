@@ -47,7 +47,7 @@
                            Style="{DynamicResource txtBlockStyle}"/>
             </Grid>
         </DockPanel>
-        
+
         <TextBlock Text="Текущие координаты" Grid.Column="0" 
                    Grid.Row="0" 
                    Style="{DynamicResource txtBlockStyle}"/>
@@ -78,5 +78,13 @@
                 Style="{DynamicResource btnStyle}"
                 Grid.Column="1" Grid.Row="5"
                 Click="BtnRequestClick"/>
+        <Button x:Name="UsbComBtn" Content="COM" Style="{DynamicResource btnUSB}"
+                ToolTip="Подключение/переподключение СОМ порта"
+                Grid.Column="2" Grid.Row="4" Grid.RowSpan="2"
+                Click="UsbComBtn_Click" IsEnabled="True">
+            <Button.Tag>
+                <ImageSource>/Images/usb-disconnect.png</ImageSource>
+            </Button.Tag>
+        </Button>
     </Grid>
 </Window>
