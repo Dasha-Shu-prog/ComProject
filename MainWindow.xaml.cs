@@ -39,7 +39,7 @@ namespace ComProject
         COMPort port;      
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent();         
         }
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
@@ -120,7 +120,7 @@ namespace ComProject
             }
             COMPortWindow = new WinCOM();
             COMPortWindow.Owner = this;
-            COMPortWindow.Show();
+            COMPortWindow.Show();                         
         }
         private void Window_Closed(object sender, EventArgs e)
         {
